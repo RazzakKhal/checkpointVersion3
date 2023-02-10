@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Quote } from './quote';
 
 @Component({
   selector: 'app-root',
@@ -7,9 +8,8 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'checkpointAngular';
-  personnages : any;
-  citationPerso : any;
-  persoTof : any;
+ chargement : boolean = true;
+  Filterquotes : Array<Quote> = [];
 
 
   constructor(){
@@ -20,7 +20,7 @@ export class AppComponent {
 
  async recupCitations(){
 
-let tab = [];
+let tab : Array<[]>= [];
 
 for(let i =0; i < 6; i++){
   let reponse = await fetch('https://thesimpsonsquoteapi.glitch.me/quotes');
@@ -28,38 +28,48 @@ for(let i =0; i < 6; i++){
   tab.push(data);
 }
 
-console.log(tab);
+//fin du chargement
+
+this.chargement = false;
+
 
  // récupération des personnages
 
-
- let persos = tab.map((quote : any) => quote[0].character);
-
-
- // récupération des photos des perso
-
- let photos = tab.map((quote : any) => quote[0].image);
+ let quotes : Array<Quote> = tab.map((quote : any) => quote[0]);
 
 
  // filtrage du tableau pour ne laisser qu'une occurence de chaque perso
 
- let persoFilter = persos.filter((charac : any, index : any) => persos.indexOf(charac) === index );
+let quotesFilter : Array<Quote> = [];
 
 
-let imageFilter = photos.filter((charac : any, index : any) => photos.indexOf(charac) === index );
+// je boucle autant de fois que j'ai de citations
+for(let i = 0; i < quotes.length; i++){
+// je récupère les noms des characters présents dans mon quotesFilter
+let arrayName : Array<string> = [];
+quotesFilter.forEach((item) => { arrayName.push(item.character) });
 
- // recuperation des personnages pour les utiliser dans le HTML
- this.personnages = persoFilter;
- this.persoTof = imageFilter;
+if(arrayName.includes(quotes[i].character)){
+
+}else{
+  quotesFilter.push(quotes[i]);
 }
 
-async recupCitationPerso(perso : any){
-  let reponse = await fetch(`https://thesimpsonsquoteapi.glitch.me/quotes?character=${perso}`);
+
+}
+
+
+// récupération du tableau de citation pour afficher image et nom en HTML
+this.Filterquotes = quotesFilter;
+
+}
+
+async recupCitationPerso(quote : Quote){
+  let reponse = await fetch(`https://thesimpsonsquoteapi.glitch.me/quotes?character=${quote.character}`);
   let data = await reponse.json();
 
   console.log(data[0].quote);
-  //récupération de la citation perso pour l'afficher dans le HTML si besoin
-  this.citationPerso = data;
+
 
 
     }

@@ -1,9 +1,9 @@
 <ul>
-  <li *ngFor="let charac of personnages; let index = index">
+  <li *ngFor="let quote of Filterquotes; let index = index">
 
-<img [src]="persoTof[index]" alt="">
-<button (click)="recupCitationPerso(charac)">{{charac}}</button>
+<img [src]="quote.image" alt="">
+<button (click)="recupCitationPerso(quote)">{{quote.character}}</button>
   </li>
 </ul>
 
-<div class="chargement" *ngIf="!personnages">CHARGEMENT DE LA PAGE ....</div>
+<div class="chargement" *ngIf="chargement">CHARGEMENT DE LA PAGE ....</div>
